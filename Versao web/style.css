@@ -1,0 +1,21 @@
+
+#div-configs {
+    padding: 50px;
+    border-radius: 10px;
+    background-color: rgb(220, 220, 220);
+}
+
+#container-materias {
+    padding-top : 18px;
+    background-color: rgb(230, 230, 230);
+    border-radius: 6px;
+    border: 1px solid black;
+}
+
+.fonte-btn {
+    font-size: 18px;
+}
+
+.erro {
+    color: red;
+}

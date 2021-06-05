@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="functions.js"></script>
+    <script src="main.js"></script>
+    <link href='style.css' rel="stylesheet"></link>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <title>Calculadora médias</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <div class="container-fluid">
+            <h1 style='margin: auto; color: white;' class="display-4">Calculadora médias notion</h1>
+        </div>
+    </nav>
+
+    <div class='mt-5 container' id='div-configs'>
+        <h1 style='text-align: center;' class='mb-4'>Matérias</h1>
+
+        <div id='container-materias' class="row row-cols-md-2 row-cols-xl-3 mb-5">
+        </div>
+
+        <div class='row row-cols-lg-2'>
+            <div class="d-grid gap-2">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#materia-modal" class='fonte-btn btn btn-outline-primary mb-3'>
+                    Adicionar matéria <i class="bi bi-plus-circle"></i>
+                </button>
+            </div>
+            <div class="d-grid gap-2">
+                <button id='btn-config-token' type="button" data-bs-toggle="modal" data-bs-target="#token-modal" class='fonte-btn btn btn-outline-primary mb-3'>
+                    Configurar token <i class="bi bi-gear"></i>
+                </button>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#json-materias-modal" class='fonte-btn btn btn-outline-primary mb-3'>
+                    Aplicar JSON matérias <i class="bi bi-plus-circle"></i>
+                </button>
+            </div>
+            <div class="d-grid gap-2">
+                <button id='copiar-json' type="button" class='fonte-btn btn btn-outline-primary mb-3'>
+                    Copiar JSON matérias atual
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar matérias -->
+    <div class="modal fade" id="materia-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="materia-modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
+            <form>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="materia-modalLabel">Adicionar matéria</h5>
+                        <button type="button" class="btn-close fechar-modal-materia" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id='modal-body-materias' class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="nome-materia" placeholder="nome matéria">
+                            <label for="nome-materia">Nome da matéria</label>
+                            <span id='erro-nome-materia' class='erro'></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="id-materia" placeholder="id matéria">
+                            <label for="id-materia">ID do banco de dados para armazenar as médias</label>
+                            <span id='erro-id-materia' class='erro'></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="qnt-notas" placeholder="0">
+                            <label for="qnt-notas">Quantidade de notas</label>
+                            <span id='erro-qnt-notas' class='erro'></span>
+                        </div>
+
+                        <div id='div-inputs-notas' class='row row-cols-2'>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="formula-materia" placeholder="formula">
+                            <label for="formula-materia">Formula para calcular a média</label>
+                            <span id='erro-formula-materia' class='erro'></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary fechar-modal-materia" data-bs-dismiss="modal">Fechar</button>
+                        <button id='salvar-materia' type="button" class="btn btn-success" type='submit'>Salvar matéria</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para editar token -->
+    <div class="modal fade" id="token-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="token-modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="token-modalLabel">Configurar token</h5>
+                        <button type="button" class="btn-close fechar-modal-token" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="token" placeholder="token">
+                        <label for="token">Token</label>
+                        <span id='erro-token' class='erro'></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary fechar-modal-token" data-bs-dismiss="modal">Fechar</button>
+                    <button id='salvar-token' type="button" class="btn btn-success">Salvar token</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar token -->
+    <div class="modal fade" id="json-materias-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="json-materias-modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="json-materias-modalLabel">Configurar JSON</h5>
+                        <button type="button" class="btn-close fechar-modal-json" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="input-json" placeholder="token">
+                        <label for="token">JSON matérias</label>
+                        <span id='erro-input-json' class='erro'></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary fechar-modal-json" data-bs-dismiss="modal">Fechar</button>
+                    <button id='salvar-json' type="button" class="btn btn-success">Salvar JSON</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>
