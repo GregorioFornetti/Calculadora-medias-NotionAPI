@@ -17,6 +17,8 @@ A calculadora de médias é um programa que pode ser utilizado em conjunto com o
 
 ### Configurando a página das médias
 
+### Coletando ids de bancos de dados
+
 
 ## Configurando o programa de cálculo de médias
 
