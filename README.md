@@ -111,10 +111,72 @@ Agora iremos ver como que coletamos o ids que precisaremos para a próxima etapa
 
 ## Configurando o programa de cálculo de médias
 
+Acabamos de chegar na etapa final: __configurar o programa__. Para isso, abra a pasta que saiu da descompactação, e dentro dessa pasta abra o diretório __"Versão web"__ e depois abra o arquivo __"medias.html"__.
+
+![abrindo o programa](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/20.jpg)
+
 ### Configurando o token
+
+Com o arquivo aberto, clique no botão __"Configurar token"__, e na nova aba que abriu, digite o token de integração que você copiou no começo desse tutorial e depois clique em __"Salvar token"__.
+
+![configurando o token](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/21.jpg)
 
 ### Configurando as matérias
 
+Agora, é necessário configurar cada matéria que você colocou no notion, para isso clique no botão adicionar matéria
+
+![botão adicionar matérias](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/22.jpg)
+
+Ao clicar no botão, uma nova aba será aberta com vários campos para preencher. 
+
+O __primeiro campo__ é o nome da matéria que você está atualmente editando.
+
+O __segundo campo__ é o id do banco de dados da média final da matéria que você está colocando atualmente.
+
+O __terceiro campo__ é a quantidade de médias que são necessárias para o cálculo da média final. Após digitar um número, outros campos aparecerão para que você configure cada nota. Cada nota precisa receber um nome (sua abreviatura, precisa ser a mesma que você utilizou na tabela de médias finais) e um id, que deve ser coletado através da tabela da média em questão.
+
+O __último campo__ é a fórmula que será utilizada para o cálculo da média final. Nesse campo você deverá utilizar as abreviaturas das médias (as que foram utilizadas nos campos de notas) para criar uma fórmula.
+
+__Abaixo estão os exemplos utilizando as matérias física e matemática que foram utilizadas anteriormente:__
+
+Fórmula para física: ![formula para calcular a média de física](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/media1.jpg)
+
+Fórmula para matemática: ![formula para calcular a média de matemática](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/media2.jpg)
+
+![configurando a matéria de física](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/23.jpg)
+
+![configurando a matéria de matemática](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/24.jpg)
+
+__OBS 1:__ Após configurar e salvo todas as matérias, elas aparecerão nesse mesmo programa (medias.html) como botões com o nome das matérias que você configurou. Caso você clique no botão do nome da matéria, você poderá edita-la. Há também o botão vermelho com um ícone de lixo caso você queira excluir a matéria.
+
+__OBS 2:__ Caso você já tenha perdido as configurações no programa medias.html e possui apenas a configuração em texto, você pode colocar a configuração toda clicando no botão __"Aplicar JSON matérias"__ e colando o texto de configuração no campo __"JSON matérias"__.
+
+![configurando a partir de texto](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/25.jpg)
+
 ### Transferindo as configurações para o programa desktop
 
+Agora, precisamos passar todas essas configurações para o programa desktop. Para isso, clique no botão __"Copiar JSON matérias atual"__ para copiar as configurações.
+
+![coletando as configurações](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/26.jpg)
+
+Para passar essas configurações, abra a pasta do programa e depois abra o diretório __"Versão terminal"__. Nessa pasta você irá encontrar um arquivo chamado __"materias.json"__. Caso você tenha um editor de códigos, você pode abrir com esse editor e colar as configurações que você copiou nesse arquivo. Caso você não tenha um editor de códigos, clique com o botão direito nesse arquivo e escolha a opção __"Abrir com"__ e abra com o bloco de notas, e cole as configurações nele e depois salve o arquivo.
+
+![aplicando as configurações](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/27.jpg)
+
 ### Executando o programa
+
+Agora, nessa mesma pasta, abra o arquivo executável,
+
+![abrindo o executavel](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/28.jpg)
+
+e no terminal que abriu digite o número 2 e tecle __"Enter"__. Deverá aparecer várias configurações, verifique se elas estão corretas.
+
+![verificando configurações](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/29.jpg)
+
+Depois de verificar as configurações digite o número 4 e tecle __"Enter"__. Esse processo demorará dependendo de quantas médias forem necessárias calcular. Caso dê tudo certo, p resultado no terminal deverá parecer com a imagem abaixo:
+
+![resultado no terminal](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/30.jpg)
+
+Agora você pode fechar o programa e abrir a página de médias do notion. Lá aparecerá todas as médias calculadas, parecido com a imagem abaixo:
+
+![resultado no notion](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/31.jpg)
