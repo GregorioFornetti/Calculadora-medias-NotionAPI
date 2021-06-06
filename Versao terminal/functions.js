@@ -8,7 +8,7 @@ module.exports = {
         console.log("1 - Configurar")
         console.log("2 - Ver configurações")
         console.log("3 - Adicionar matéria")
-        console.log("4 - Imprimir médias")
+        console.log("4 - Imprimir e atualizar médias")
         console.log("5 - Apagar matéria")
         console.log("6 - Finalizar programa")
     },
@@ -40,7 +40,19 @@ module.exports = {
             let configs = fs.readFileSync("./materias.json", {encoding:'utf8'})
             configs = JSON.parse(configs)
             console.log("Configurações:")
-            console.log(`Token: ${configs['token']}`)
+            console.log(`Token: ${configs['token']}\n`)
+
+            for (let materia in configs) {
+                if (configs.hasOwnProperty(materia) && materia != "token") {
+                    console.log(`Matéria: ${materia}`)
+                    console.log(`Id banco de dados média: ${configs[materia]['id']}`)
+                    console.log(`Formula: ${configs[materia]['formula']}`)
+                    for (let nota in configs[materia]['notas'])
+                        if (configs[materia]['notas'].hasOwnProperty(nota))
+                            console.log(`Nota ${nota}: ${configs[materia]['notas'][nota]}`)
+                    console.log()
+                }
+            }
         } catch (error) {
             console.error(error)
         }
@@ -170,8 +182,8 @@ async function imprimir_e_atualizar() {
                         notasPiorCaso[nota] /= qnt_notas
                         notasMelhorCaso[nota] /= qnt_notas
 
-                        console.log(`${nota} (melhor caso): ${notasPiorCaso[nota].toFixed(2)}`)
-                        console.log(`${nota} (pior caso): ${notasMelhorCaso[nota].toFixed(2)}`)
+                        console.log(`${nota} (melhor caso): ${notasMelhorCaso[nota].toFixed(2)}`)
+                        console.log(`${nota} (pior caso): ${notasPiorCaso[nota].toFixed(2)}`)
                     } catch (error) {
                         console.log(error)
                         console.error("Ocorreu um erro ao tentar acessar o banco de dados !\nVerifique as configurações !\n")
