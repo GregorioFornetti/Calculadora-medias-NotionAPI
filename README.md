@@ -77,11 +77,37 @@ Dentro dessa tabela, uma das colunas precisa necessariamente se chamar __"Nota"_
 
 ![criando a coluna de "Nota"](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/13.jpg)
 
+4- Agora, basta você fazer esse processo para todas as matérias e médias, armazenando todas as suas notas nessas tabelas. Para exemplificar como que deve ficar as tabelas, irei criar as tabelas para as matérias __"Física"__ e __"Matemática"__. 
+
+![criando a página de física](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/14.jpg)
+
+![criando a página de matemática](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/15.jpg)
+
+__OBS 1:__ As tabelas podem possuir mais colunas do que apenas a coluna de __"Nota"__.
+
+__OBS 2:__ As abreviaturas que cada média possuem serão essenciais para a criação de uma fórmula para o cálculo da média final e para colocar na tabela de médias finais.
 
 ### Configurando a página das médias
 
-### Coletando ids de bancos de dados
+Na página de médias, precisamos criar tabelas para armazenar as médias finais de cada matéria. Todas as tabelas serão __"Tables inline"__ com a primeira coluna do tipo __"Title"__ com o nome de __"Caso"__ e as próximas colunas serão todas do tipo __"Number"__, uma com o nome de __"Media"__ e as outras terão o nome da abreviatura das médias da matéria que você está criando a tabela atualmente. Essas tabelas deverão ter duas linhas: __na primeira linha__ coloque __"Melhor caso"__ como valor da coluna de __"Caso"__ e __na segunda linha__ coloque __"Pior caso"__ como valor da coluna de __"Caso"__. Veja a imagem abaixo como exemplo de como deve ficar essas tabelas.
 
+![criando a página de médias](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/16.jpg)
+
+### Coletando ids de bancos de dados das tabelas
+
+Agora iremos ver como que coletamos o ids que precisaremos para a próxima etapa (configuração do programa). Para coletar o id de uma tabela, siga os próximos passos:
+
+1- Escolha uma tabela qualquer e clique no botão __"Open as page"__.
+
+![abrindo uma tabela como pagina](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/17.jpg)
+
+2- Após efetuar o passo anterior, uma nova pagina será aberta apenas com a tabela que você escolheu. Nessa página, clique no botão __"Share"__ e depois em __"Copy link"__.
+
+![coletando o link da tabela](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/18.jpg)
+
+3- Com o link copiado, cole-o em algum documento de texto. No link, você encontrará o id da tabela logo antes de __"?v="__.
+
+![marcação do id do banco de dados dentro do link](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/19.jpg)
 
 ## Configurando o programa de cálculo de médias
 
@@ -92,7 +118,3 @@ Dentro dessa tabela, uma das colunas precisa necessariamente se chamar __"Nota"_
 ### Transferindo as configurações para o programa desktop
 
 ### Executando o programa
-
-![criando a página de física](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/14.jpg)
-![criando a página de matemática](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/15.jpg)
-![criando a página de médias](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/16.jpg)
