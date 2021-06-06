@@ -5,6 +5,8 @@ A calculadora de médias é um programa que pode ser utilizado em conjunto com o
 
 ## Vídeo tutorial
 
+[Clique aqui caso queira ver o tutorial em vídeo](https://youtu.be/tTcy4hMWR_o)
+
 
 ## Instalação
 
