@@ -8,12 +8,75 @@ A calculadora de médias é um programa que pode ser utilizado em conjunto com o
 
 ## Instalação
 
+Para instalar o programa, siga os passos abaixo:
+
+1- __Baixar o programa__: no topo dessa mesma página, você deverá clicar em um botão escrito __"Code"__, que abrirá uma pequena aba abaixo dele. Nessa aba, clique no botão __"Download zip"__ para que o download do programa seja efetuado. 
+
+![imagem indicando os botões que devem ser clicados](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/1.jpg)
+
+2- __Extrair o programa__: o programa baixado virá dentro de uma pasta compactada, então será necessário descompacta-la antes de utilizar o programa. Para isso, coloque essa pasta compactada na sua área de trabalho (ou em qualquer outro lugar que você tenha fácil acesso) e clique com o botão direito nela. Depois disso, abrirá uma aba com várias opções, e você deve escolher a opção __"Extract Here"__ (extrair aqui). 
+
+![imagem indicando a opção que deve ser escolhida](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/2.jpg)
+
 
 ## Configurando o notion
 
+Agora que o programa já está instalado, vamos configurar o __notion__ para podermos usar o programa de cálculo de médias.
+
 ### Criando e configurando uma integração no Notion
 
-### Configurando as páginas de matérias no notion
+Primeiro, vamos configurar uma integração, que irá permitir que nosso programa tenha acesso aos bancos de dados do notion. Para configurar-la corretamente, siga os passos abaixo:
+
+1- Efetue o login no notion e clique no botão __"Setting & members"__.
+
+![indicação do botão settings e members](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/3.jpg)
+
+2- Após clicar nesse botão, abrirá uma nova aba com várias opções. Clique na opção __"Integrations"__ e depois no botão __"Develop your own integrations"__.
+
+![indicação dos botões de integração](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/4.jpg)
+
+3- Na nova página aberta, clique no botão __"Create new integration"__
+
+![indicação do botão new integration](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/5.jpg)
+
+4- Preencha o campo de nome com um nome qualquer (Ex: calculadora de média) e depois clique no botão __"Submit"__
+
+![indicação de nome e botão de enviar](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/6.jpg)
+
+5- Pronto, a integração acabou de ser criada ! Agora, na nova página aberta, copie o __"Token"__ de integração e guarde em algum lugar, pois ele vai ser importante para a configuração do programa.
+
+![indicação de nome e botão de enviar](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/7.jpg)
+
+6- Agora, para finalizar essa etapa, selecione a opção __"Internal integration"__ e clique no botão __"Save changes"__.
+
+![salvando as mudanças](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/8.jpg)
+
+### Criando e configurando as páginas de matérias no notion
+
+Agora com a integração configurada, podemos começar a criar as páginas de matérias escolares. Para a criação correta das páginas, siga os passos abaixo:
+
+1- Crie uma página principal (com o nome da sua faculdade ou escola) e dentro dessa página adicione outras páginas com o nome das matérias que você está tendo e uma página adicional chamada __"Médias"__ (caso você já tenha criado páginas para a organização das matérias de sua faculdade ou escola, você pode pular esse passo). Para exemplicar, criei uma página com o nome __"Faculdade"__ e dentro dela criei duas matérias (além da página médias): __"Física"__ e __"Matemática"__.
+
+![páginas criadas para o exemplo](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/9.jpg)
+
+2- Após criar as páginas, selecione a sua página principal (a página da faculdade ou escola), clique em __"Share"__ e depois no botão azul escrito __"Invite"__.
+
+![indicação share e invite](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/10.jpg)
+
+Depois de clicar em __"Invite"__, uma nova aba aparecerá. Nessa aba, procure a sua integração e clique nela (no caso, a integração que eu criei se chama __"Tutorial"__, mas você deve procurar pelo nome que você colocou na sua integração) e clique novamente no botão __"Invite"__.
+
+![invite para a integração](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/11.jpg)
+
+OBS: esse passo é essencial para o funcionamento do programa. Se você esquecer essa etapa, será impossível com que o programa acesse o banco de dados do notion.
+
+3- Agora, vamos configurar as páginas das matérias. Dentro de uma das páginas de matérias, crie uma __"Table inline"__ que será onde armazenaremos as notas de umas das médias necessárias para o cálculo da média final.
+
+![criando a tabela de notas](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/12.jpg)
+
+Dentro dessa tabela, uma das colunas precisa necessariamente se chamar __"Nota"__, além de ser do tipo __"Number"__ (se o nome ou o tipo dessa coluna estiver incorreto, o programa não conseguirá calcular a média para essa matéria). Nessa coluna, você deverá armazenar todas as notas que pertencem a essa média. Caso tenha algum trabalho ou prova que você já fez e não recebeu a nota, coloque ele dentro dessa coluna com algum valor negativo, pois o programa irá identificar esse número negativo como uma nota ainda não recebida, e no cálculo da média final, no melhor caso ele considerará que você tirou nota máxima (10) e no pior caso considerará que você tirou a pior nota (0).
+
+![criando a coluna de "Nota"](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/13.jpg)
+
 
 ### Configurando a página das médias
 
@@ -29,3 +92,7 @@ A calculadora de médias é um programa que pode ser utilizado em conjunto com o
 ### Transferindo as configurações para o programa desktop
 
 ### Executando o programa
+
+![criando a página de física](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/14.jpg)
+![criando a página de matemática](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/15.jpg)
+![criando a página de médias](https://github.com/GregorioFornetti/Calculadora-medias-NotionAPI/blob/imgs/Imgs-turorial/Editadas/16.jpg)
