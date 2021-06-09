@@ -26,24 +26,11 @@ function copyStringToClipboard (str) {
     document.execCommand('copy');
     // Remove temporary element
     document.body.removeChild(el);
- }
- 
-
-function restaurar_modal_materia() {
-    mostrar_inputs_notas(0, true)  // Limpar todos inputs de notas
-
-    let modal_body = document.querySelector("#modal-body-materias")
-    for (let i = 0; i < modal_body.children.length; i++) {
-        if (modal_body.children[i].id != 'div-inputs-notas') {
-            modal_body.children[i].children[0].value = ''  // Limpar conteúdo input
-            modal_body.children[i].children[0].readOnly = false
-            modal_body.children[i].children[2].innerHTML = ''  // Limpar campo de erro do input
-        }
-    }
 }
 
 
 function criar_inputs_notas() {
+    // Criará e colocará os inputs de notas (nome e id do banco de dados para tal média) no modal de matérias.
     let div_inputs_notas = document.querySelector("#div-inputs-notas")
     div_inputs_notas.innerHTML = ''
 
@@ -53,19 +40,81 @@ function criar_inputs_notas() {
     }
 }
 
-function mostrar_inputs_notas(qnt_notas, reset_value = false) {
+function retornar_input_nota(label_input, id_input) {
+    let container_final = document.createElement("div")
+    
+    let container_input = document.createElement("div")
+    container_input.className = "form-floating mb-3"
+    container_input.id = `container-${id_input}`
+    container_input.style.display = 'none'
+
+    let input_nota = document.createElement("input")
+    input_nota.type = 'text'
+    input_nota.className = 'form-control'
+    input_nota.id = id_input
+    input_nota.placeholder = label_input
+
+    let label_nota = document.createElement("label")
+    label_nota.htmlFor = id_input
+    label_nota.innerText = label_input
+
+    let span_erro = document.createElement("span")
+    span_erro.className = 'erro'
+    span_erro.id = `erro-${id_input}`
+
+    container_input.append(input_nota)
+    container_input.append(label_nota)
+    container_input.append(span_erro)
+
+    container_final.append(container_input)
+
+    return container_final
+}
+ 
+
+function restaurar_modal_materia() {
+    // Irá fazer com que o modal de materias volte a ser como era no inicio da execução.
+    mostrar_inputs_notas(0, true)  // Limpar todos inputs de notas (e esconde-los)
+
+    let modal_body = document.querySelector("#modal-body-materias")
+    for (let i = 0; i < modal_body.children.length; i++) {
+        let container_atual = modal_body.children[i]
+        limpar_input_materia(container_atual.querySelector('input'))
+        apagar_msg_erro_input_materia(container_atual.querySelector('.erro'))
+    }
+}
+
+function limpar_input_materia(input_materia) {
+    if (input_materia) {
+        input_materia.value = ''
+        input_materia.readOnly = false
+    }
+}
+
+function apagar_msg_erro_input_materia(label_erro) {
+    if (label_erro)
+        label_erro.innerHTML = ''
+}
+
+
+function mostrar_inputs_notas(qnt_notas, resetar = false) {
+    /* Mostrará os inputs de notas (campo de nome e id de notas presente) dependendo do parametro qnt_notas.
+       EX: se qnt_notas = 1, mostrará apenas os 2 primeiros campos de notas (nome nota 1 e id nota 1) */
+    // Se resetar for verdadeiro, limpará o campo dos inputs (será aplicado quando fechar ou enviar o formulário).
     for (let num_nota_atual = 1; num_nota_atual <= MAX_NOTAS; num_nota_atual++) {
         let display_atual = (num_nota_atual > qnt_notas) ? ('none') : ('block')
-        let input_nome_nota = document.querySelector(`#nome-nota-${num_nota_atual}`)
-        let input_id_nota = document.querySelector(`#id-nota-${num_nota_atual}`)
+        atualizar_input_nota(`container-nome-nota-${num_nota_atual}`, display_atual, resetar)
+        atualizar_input_nota(`container-id-nota-${num_nota_atual}`, display_atual, resetar)
+    }
+}
 
-        input_nome_nota.parentElement.style.display = display_atual
-        input_id_nota.parentElement.style.display = display_atual
-
-        if (reset_value) {
-            input_nome_nota.value = ''
-            input_id_nota.value = ''
-        }
+function atualizar_input_nota(id_container_input, tipo_display, resetar) {
+    // Define o pai do input (container do input) como visivel ou invisivel dependendo do argumento "tipo_display"
+    let container_input = document.getElementById(id_container_input)
+    container_input.style.display = tipo_display
+    if (resetar) {
+        container_input.querySelector('input').value = ''
+        container_input.querySelector('.erro').innerHTML = ''
     }
 }
 
@@ -88,37 +137,6 @@ function corrigir_input_qnt_notas(valor_input) {
         return valor_input
     } 
     return ''
-}
-
-function retornar_input_nota(label_input, id_input, input_value = '') {
-    let container_final = document.createElement("div")
-    
-    let container_input = document.createElement("div")
-    container_input.className = "form-floating mb-3"
-    container_input.style.display = 'none'
-
-    let input_nota = document.createElement("input")
-    input_nota.type = 'text'
-    input_nota.className = 'form-control'
-    input_nota.id = id_input
-    input_nota.placeholder = label_input
-    input_nota.value = input_value
-
-    let label_nota = document.createElement("label")
-    label_nota.htmlFor = id_input
-    label_nota.innerText = label_input
-
-    let span_erro = document.createElement("span")
-    span_erro.className = 'erro'
-    span_erro.id = `erro-${id_input}`
-
-    container_input.append(input_nota)
-    container_input.append(label_nota)
-    container_input.append(span_erro)
-
-    container_final.append(container_input)
-
-    return container_final
 }
 
 
