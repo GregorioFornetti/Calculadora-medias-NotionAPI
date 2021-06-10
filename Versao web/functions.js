@@ -70,217 +70,6 @@ function retornar_input_nota(label_input, id_input) {
 
     return container_final
 }
- 
-
-function restaurar_modal_materia() {
-    // Irá fazer com que o modal de materias volte a ser como era no inicio da execução.
-    mostrar_inputs_notas(0, true)  // Limpar todos inputs de notas (e esconde-los)
-
-    let modal_body = document.querySelector("#modal-body-materias")
-    for (let i = 0; i < modal_body.children.length; i++) {
-        let container_atual = modal_body.children[i]
-        limpar_input_materia(container_atual.querySelector('input'))
-        apagar_msg_erro_input_materia(container_atual.querySelector('.erro'))
-    }
-}
-
-function limpar_input_materia(input_materia) {
-    if (input_materia) {
-        input_materia.value = ''
-        input_materia.readOnly = false
-    }
-}
-
-function apagar_msg_erro_input_materia(label_erro) {
-    if (label_erro)
-        label_erro.innerHTML = ''
-}
-
-
-function mostrar_inputs_notas(qnt_notas, resetar = false) {
-    /* Mostrará os inputs de notas (campo de nome e id de notas presente) dependendo do parametro qnt_notas.
-       EX: se qnt_notas = 1, mostrará apenas os 2 primeiros campos de notas (nome nota 1 e id nota 1) */
-    // Se resetar for verdadeiro, limpará o campo dos inputs (será aplicado quando fechar ou enviar o formulário).
-    for (let num_nota_atual = 1; num_nota_atual <= MAX_NOTAS; num_nota_atual++) {
-        let display_atual = (num_nota_atual > qnt_notas) ? ('none') : ('block')
-        atualizar_input_nota(`container-nome-nota-${num_nota_atual}`, display_atual, resetar)
-        atualizar_input_nota(`container-id-nota-${num_nota_atual}`, display_atual, resetar)
-    }
-}
-
-function atualizar_input_nota(id_container_input, tipo_display, resetar) {
-    // Define o pai do input (container do input) como visivel ou invisivel dependendo do argumento "tipo_display"
-    let container_input = document.getElementById(id_container_input)
-    container_input.style.display = tipo_display
-    if (resetar) {
-        container_input.querySelector('input').value = ''
-        container_input.querySelector('.erro').innerHTML = ''
-    }
-}
-
-function corrigir_e_adicionar_inputs_notas() {
-    let input_qnt_notas = document.querySelector("#qnt-notas")
-    input_qnt_notas.value = corrigir_input_qnt_notas(input_qnt_notas.value)
-    let qnt_notas = parseInt(input_qnt_notas.value)
-
-    if (!qnt_notas)
-        qnt_notas = 0
-    mostrar_inputs_notas(qnt_notas)
-}
-
-function corrigir_input_qnt_notas(valor_input) {
-    if (!valor_input.match(/[^\d]/)) {
-        if (parseInt(valor_input) < 0)
-            return 0
-        else if (parseInt(valor_input) > MAX_NOTAS)
-            return MAX_NOTAS
-        return valor_input
-    } 
-    return ''
-}
-
-
-function verificar_input_vazio(node_input, node_erro) {
-    if (node_input.value.length === 0) {
-        node_erro.innerHTML = "Você precisa preencher esse campo"
-        return 1
-    }
-    node_erro.innerHTML = ''
-    return 0
-}
-
-function verificar_input_nome_materia(node_input, node_erro) {
-    if (verificar_input_vazio(node_input, node_erro))
-        return 1
-    if (node_input.value === 'token') {
-        node_erro.value = 'Nome de matéria inválido'
-        return 1
-    }
-    return 0
-}
-
-function analisar_e_salvar_inputs_materia() {
-    let qnt_erros = 0
-
-    let input_nome_materia = document.querySelector("#nome-materia")
-    let erro_nome_materia = document.querySelector("#erro-nome-materia")
-    qnt_erros += verificar_input_nome_materia(input_nome_materia, erro_nome_materia)
-
-    let input_id_materia = document.querySelector("#id-materia")
-    let erro_id_materia = document.querySelector("#erro-id-materia")
-    qnt_erros += verificar_input_vazio(input_id_materia, erro_id_materia)
-
-    let input_qnt_notas = document.querySelector("#qnt-notas")
-    let erro_qnt_notas = document.querySelector("#erro-qnt-notas")
-    if (input_qnt_notas.value.length === 0 || parseInt(input_qnt_notas.value) === 0) {
-        erro_qnt_notas.innerHTML = "Você precisa preencher esse campo"
-        qnt_erros++
-    } else {
-        erro_qnt_notas.innerHTML = ''
-    }
-
-
-    let qnt_notas = parseInt(input_qnt_notas.value)
-    if (qnt_notas) {
-        var notas_e_ids = {}
-        for (let num_nota_atual = 1; num_nota_atual <= qnt_notas; num_nota_atual++) {
-            let qnt_erros_antiga = qnt_erros
-            let input_nome_nota = document.querySelector(`#nome-nota-${num_nota_atual}`)
-            let erro_nome_nota = document.querySelector(`#erro-nome-nota-${num_nota_atual}`)
-            let input_id_nota = document.querySelector(`#id-nota-${num_nota_atual}`)
-            let erro_id_nota = document.querySelector(`#erro-id-nota-${num_nota_atual}`)
-
-            if (input_nome_nota.value.length === 0) {
-                qnt_erros++
-                erro_nome_nota.innerHTML = "Você precisa preencher esse campo"
-            } else {
-                let nome_ja_usado = false
-                for (let nome_nota in notas_e_ids) {
-                    if (notas_e_ids.hasOwnProperty(nome_nota) && nome_nota.toUpperCase() == input_nome_nota.value.toUpperCase()) {
-                        nome_ja_usado = true
-                        break
-                    }
-                }
-                if (nome_ja_usado) {
-                    qnt_erros++
-                    erro_nome_nota.innerHTML = "Esse nome de nota já foi usado"
-                } else {
-                    erro_nome_nota.innerHTML = ''
-                }
-            }
-
-            qnt_erros += verificar_input_vazio(input_id_nota, erro_id_nota)
-
-            if (qnt_erros == qnt_erros_antiga)
-                notas_e_ids[input_nome_nota.value] = input_id_nota.value
-        }
-    }
-
-    let input_formula = document.querySelector("#formula-materia")
-    let erro_formula = document.querySelector("#erro-formula-materia")
-    if (input_formula.value.length === 0) {
-        erro_formula.innerHTML = 'Você precisa preencher esse campo'
-        qnt_erros++
-    } else {
-        let notas = {}
-        var formula = ' ' + input_formula.value.replace(/\s/g, '') + ' '
-        for (let nome_nota in notas_e_ids) {
-            if (notas_e_ids.hasOwnProperty(nome_nota)) {
-                let expressao = new RegExp(`(\\W)${nome_nota}(\\W)`, 'ig')
-                formula = formula.replace(expressao, `$1notas['${nome_nota}']$2`)
-                notas[nome_nota] = 1
-            }
-        }
-        // Verifica se a formula fornecida é válida. Se a formula é inválida, ou ela retornará um NaN ou undefined ou acontecerá um erro, parando no catch.
-        try {
-            eval(formula) + 1
-            erro_formula.innerHTML = ''
-        } catch (error) {
-            qnt_erros++
-            erro_formula.innerHTML = 'Formula inválida'
-        }
-    }
-
-    if (qnt_erros == 0) {
-        let json_materia_atual = {'notas' : notas_e_ids,
-                                  'id' : input_id_materia.value,
-                                  'formula' : input_formula.value,
-                                  'formulaFormatada' : formula}
-        
-        if (!localStorage.getItem(input_nome_materia.value)) {
-            document.querySelector("#container-materias").append(retornar_btn_materia(input_nome_materia.value))
-        }
-        localStorage.setItem(input_nome_materia.value, JSON.stringify(json_materia_atual))
-        restaurar_modal_materia()
-        alert("A matéria foi salva com sucesso !")
-
-        modal_materia.hide()
-    }
-}
-
-
-function carregar_input_token() {
-    let token = localStorage.getItem("token")
-    if (token)
-        document.querySelector("#token").value = token
-}
-
-function analisar_e_salvar_input_token() {
-    let input_token = document.querySelector("#token")
-    let erro_token = document.querySelector("#erro-token")
-
-    if (!verificar_input_vazio(input_token, erro_token)) {
-        // Input de token não é vazio, salvar token
-        localStorage.setItem("token", input_token.value)
-        alert("Token salvo com sucesso !")
-        modal_token.hide()
-    }
-}
-
-function restaurar_modal_token() {
-    document.querySelector("#token").value = ''
-    document.querySelector("#erro-token").innerHTML = ''
-}
 
 
 function adicionar_btns_materias() {
@@ -319,30 +108,36 @@ function retornar_btn_materia(nome_materia) {
 }
 
 function carregar_inputs_materias(nome_materia) {
+    // Carregar todos campos do modal de matéria com os valores armazenados da matéria atual.
     let dados_materia = JSON.parse(localStorage.getItem(nome_materia))
 
-    let input_nome_materia = document.querySelector("#nome-materia")
-    input_nome_materia.value = nome_materia
-    input_nome_materia.readOnly = true
+    document.querySelector("#nome-materia").readOnly = true
+    carregar_inputs_materias_comum({"nome-materia": nome_materia,
+                                    "id-materia": dados_materia['id'],
+                                    "qnt-notas": Object.keys(dados_materia['notas']).length,
+                                    "formula-materia": dados_materia['formula']})
+    document.querySelector("#nome-materia").readOnly = true
 
-    let input_id_materia = document.querySelector("#id-materia")
-    input_id_materia.value = dados_materia['id']
+    carregar_inputs_notas(dados_materia['notas'])
+}
 
-    let qnt_notas = Object.keys(dados_materia['notas']).length
-    let input_qnt_notas = document.querySelector("#qnt-notas")
-    input_qnt_notas.value = qnt_notas
+function carregar_inputs_materias_comum(json_conversoes) {
+    // Coloca os valores armazenados da matéria atual (sem ser os inputs de nota) no modal de matéria.
+    for (let id_input in json_conversoes)
+        if (json_conversoes.hasOwnProperty(id_input))
+            document.getElementById(id_input).value = json_conversoes[id_input]
+}
 
+function carregar_inputs_notas(notas) {
+    // Coloca os valores armazenados das notas nos campos de notas do modal de matéria.
     let num_nota_atual = 1
-    mostrar_inputs_notas(qnt_notas)
-    for (let nome_nota in dados_materia['notas'])
-        if (dados_materia['notas'].hasOwnProperty(nome_nota)) {
+    mostrar_inputs_notas(Object.keys(notas).length)
+    for (let nome_nota in notas)
+        if (notas.hasOwnProperty(nome_nota)) {
             document.querySelector(`#nome-nota-${num_nota_atual}`).value = nome_nota
-            document.querySelector(`#id-nota-${num_nota_atual}`).value = dados_materia['notas'][nome_nota]
+            document.querySelector(`#id-nota-${num_nota_atual}`).value = notas[nome_nota]
             num_nota_atual++
         }
-
-    let input_formula = document.querySelector("#formula-materia")
-    input_formula.value = dados_materia['formula']
 }
 
 function apagar_materia(nome_materia, container_materia) {
@@ -351,15 +146,185 @@ function apagar_materia(nome_materia, container_materia) {
 }
 
 
-function salvar_JSON_materia() {
-    let input_json = document.querySelector("#input-json")
-    let erro_json = document.querySelector("#erro-input-json")
+function restaurar_modal_materia() {
+    // Irá fazer com que o modal de materias volte a ser como era no inicio da execução.
+    mostrar_inputs_notas(0, true)  // Limpar todos inputs de notas (e esconde-los)
 
-    if (!verificar_input_vazio(input_json, erro_json)) {
+    let modal_body = document.querySelector("#modal-body-materias")
+    for (let i = 0; i < modal_body.children.length; i++) {
+        let container_atual = modal_body.children[i]
+        limpar_input_materia(container_atual.querySelector('input'))
+        apagar_msg_erro_input_materia(container_atual.querySelector('.erro'))
+    }
+}
+
+function limpar_input_materia(input_materia) {
+    if (input_materia) {
+        input_materia.value = ''
+        input_materia.readOnly = false
+    }
+}
+
+function apagar_msg_erro_input_materia(label_erro) {
+    if (label_erro)
+        label_erro.innerHTML = ''
+}
+
+
+function retornar_valor_corrigido_input_qnt_notas(valor_input) {
+    // O input de quantidade de notas deverá ser um número positivo e menor ou igual a "MAX_NOTAS".
+    if (!valor_input.match(/[^\d]/)) {
+        if (parseInt(valor_input) > MAX_NOTAS)
+            return MAX_NOTAS
+        else if (parseInt(valor_input) === 0)
+            return 1
+        return valor_input
+    } 
+    return ''
+}
+
+function mostrar_inputs_notas(qnt_notas, resetar = false) {
+    /* Mostrará os inputs de notas (campo de nome e id de notas presente) dependendo do parametro qnt_notas.
+       EX: se qnt_notas = 1, mostrará apenas os 2 primeiros campos de notas (nome nota 1 e id nota 1) */
+    // Se resetar for verdadeiro, limpará o campo dos inputs (será aplicado quando fechar ou enviar o formulário).
+    for (let num_nota_atual = 1; num_nota_atual <= MAX_NOTAS; num_nota_atual++) {
+        let display_atual = (num_nota_atual > qnt_notas) ? ('none') : ('block')
+        atualizar_input_nota(`container-nome-nota-${num_nota_atual}`, display_atual, resetar)
+        atualizar_input_nota(`container-id-nota-${num_nota_atual}`, display_atual, resetar)
+    }
+}
+
+function atualizar_input_nota(id_container_input, tipo_display, resetar) {
+    // Define o pai do input (container do input) como visivel ou invisivel dependendo do argumento "tipo_display"
+    let container_input = document.getElementById(id_container_input)
+    container_input.style.display = tipo_display
+    if (resetar) {
+        container_input.querySelector('input').value = ''
+        container_input.querySelector('.erro').innerHTML = ''
+    }
+}
+
+
+function analisar_e_salvar_inputs_materia() {
+    let qnt_erros = 0
+    let json_materia = {"id": document.querySelector("#id-materia").value.trim(),
+                         "formula" : document.querySelector("#formula-materia").value.trim()}
+
+    let nome_materia = document.querySelector("#nome-materia").value.trim()
+    qnt_erros += verificar_input(nome_materia, document.querySelector("#erro-nome-materia"), ['token'])
+
+    qnt_erros += verificar_input(json_materia['id'], document.querySelector("#erro-id-materia"))
+
+    qnt_erros += verificar_input(document.querySelector("#qnt-notas").value, document.querySelector("#erro-qnt-notas"))
+
+    qnt_erros += verificar_inputs_notas(parseInt(document.querySelector("#qnt-notas").value), json_materia)
+    
+    qnt_erros += verificar_input_formula(document.querySelector("#erro-formula-materia"), json_materia)
+
+    if (qnt_erros == 0)
+        salvar_info_materia(nome_materia, json_materia)
+}
+
+function verificar_input(valor_input, node_erro, lista_nomes_invalidos = []) {
+    if (valor_input.length === 0) {
+        node_erro.innerHTML = "Você precisa preencher esse campo"
+        return 1
+    }
+    if (lista_nomes_invalidos.includes(valor_input)) {
+        node_erro.innerHTML = 'Nome já utilizado'
+        return 1
+    }
+    node_erro.innerHTML = ''
+    return 0
+}
+
+function verificar_inputs_notas(qnt_notas, json_materia) {
+    let qnt_erros = 0
+    if (qnt_notas) {
+        json_materia['notas'] = {}
+        let lista_nomes_usados = []
+        for (let num_nota_atual = 1; num_nota_atual <= qnt_notas; num_nota_atual++) {
+            let nome_nota = document.querySelector(`#nome-nota-${num_nota_atual}`).value.trim()
+            let id_nota = document.querySelector(`#id-nota-${num_nota_atual}`).value.trim()
+
+            qnt_erros += verificar_input(nome_nota, document.querySelector(`#erro-nome-nota-${num_nota_atual}`), lista_nomes_usados)
+            lista_nomes_usados.push(nome_nota)
+            qnt_erros += verificar_input(id_nota, document.querySelector(`#erro-id-nota-${num_nota_atual}`))
+
+            if (nome_nota && id_nota)
+                json_materia['notas'][nome_nota] = id_nota
+        }
+    }
+    return qnt_erros
+}
+
+function verificar_input_formula(node_erro, json_materia) {
+    if (verificar_input(json_materia['formula'], node_erro)) 
+        return 1
+    
+    let notas = {}
+    var formula = ' ' + json_materia['formula'].replace(/\s/g, '') + ' '
+    for (let nome_nota in json_materia['notas']) {
+        if (json_materia['notas'].hasOwnProperty(nome_nota)) {
+            let expressao = new RegExp(`(\\W)${nome_nota}(\\W)`, 'ig')
+            formula = formula.replace(expressao, `$1notas['${nome_nota}']$2`)
+            notas[nome_nota] = 1
+        }
+    }
+    // Verifica se a formula fornecida é válida. Se a formula é inválida, ou ela retornará um NaN ou undefined ou acontecerá um erro, parando no catch.
+    let valor_teste = eval(formula)
+    if (valor_teste && valor_teste != Infinity) {
+        node_erro.innerHTML = ''
+        json_materia['formulaFormatada'] = formula
+        return 0
+    }
+    node_erro.innerHTML = 'Formula inválida'
+    return 1
+}
+
+function salvar_info_materia(nome_materia, json_materia) {
+    if (!localStorage.getItem(nome_materia)) {
+        document.querySelector("#container-materias").append(retornar_btn_materia(nome_materia))
+    }
+    localStorage.setItem(nome_materia, JSON.stringify(json_materia))
+    restaurar_modal_materia()
+    alert("A matéria foi salva com sucesso !")
+
+    modal_materia.hide()
+}
+
+
+function carregar_input_token() {
+    // Se já tiver um token armazenado, preecher o input de token com ele.
+    let token = localStorage.getItem("token")
+    if (token)
+        document.querySelector("#token").value = token
+}
+
+function analisar_e_salvar_input_token() {
+    let token = document.querySelector("#token").value
+    if (!verificar_input(token, document.querySelector("#erro-token"))) {
+        // Input de token não é vazio, salvar token
+        localStorage.setItem("token", token)
+        alert("Token salvo com sucesso !")
+        modal_token.hide()
+    }
+}
+
+function restaurar_modal_token() {
+    // Faz com que o modal do token volte a ser como ele era no início da execução
+    document.querySelector("#token").value = ''
+    document.querySelector("#erro-token").innerHTML = ''
+}
+
+
+function salvar_JSON_materia() {
+    // Caso o JSON digitado seja válido
+    let input_json = document.querySelector("#input-json").value
+
+    if (!verificar_input(input_json, document.querySelector("#erro-input-json"))) {
         try {
-            let novo_json = JSON.parse(input_json.value)
-            console.log(novo_json)
-            localStorage.clear()
+            let novo_json = JSON.parse(input_json)
             for (let dado in novo_json) {
                 if (novo_json.hasOwnProperty(dado) && dado == 'token')
                     localStorage.setItem(dado, novo_json[dado])
@@ -370,17 +335,20 @@ function salvar_JSON_materia() {
             modal_JSON.hide()
         } catch(error) {
             console.log(error)
+            alert("Não foi possível salvar !")
         }
     }
 }
 
 function restaurar_modal_JSON() {
+    // Faz com que o modal de configuração JSON volte a ser como ele era no início da execução.
     document.querySelector("#input-json").value = ''
     document.querySelector("#erro-input-json").innerHTML = ''
 }
 
 
 function copiar_JSON_materias() {
+    // Coloca todos os valores armazenados no LocalStorage para um JSON e copia isso para o cliente.
     let json_final = {}
     for (let i = 0; i < localStorage.length; i++) {
         let chave_atual = localStorage.key(i)
