@@ -41,6 +41,7 @@ function criar_inputs_notas() {
 }
 
 function retornar_input_nota(label_input, id_input) {
+    // Retorna um container contendo um input de nota (com label, input e campo de erro).
     let container_final = document.createElement("div")
     
     let container_input = document.createElement("div")
@@ -73,6 +74,7 @@ function retornar_input_nota(label_input, id_input) {
 
 
 function adicionar_btns_materias() {
+    // Adiciona os botões matérias na pagina. São botões que permitem que o usuário possa editar as matérias que ele configurou.
     let container_materias = document.querySelector("#container-materias")
     container_materias.innerHTML = ''
     for (let i = 0; i < localStorage.length; i++) {
@@ -206,6 +208,8 @@ function atualizar_input_nota(id_container_input, tipo_display, resetar) {
 
 
 function analisar_e_salvar_inputs_materia() {
+    // Analisará todos os inputs de materia e se tiver algum erro, mostrará uma mensagem de erro logo abaixo do input.
+    // Se todos os inputs forem corretos, os dados serão salvos no localStorage.
     let qnt_erros = 0
     let json_materia = {"id": document.querySelector("#id-materia").value.trim(),
                          "formula" : document.querySelector("#formula-materia").value.trim()}
@@ -226,6 +230,9 @@ function analisar_e_salvar_inputs_materia() {
 }
 
 function verificar_input(valor_input, node_erro, lista_nomes_invalidos = []) {
+    // Retorna 1 se o input for inválido (ocorreu um erro) e 0 se for válido.
+    // Node erro é o elemento HTML que armazenará o texto de erro.
+    // O input será valido se não for vazio e nem estar na lista de nomes invalidos.
     if (valor_input.length === 0) {
         node_erro.innerHTML = "Você precisa preencher esse campo"
         return 1
@@ -239,6 +246,7 @@ function verificar_input(valor_input, node_erro, lista_nomes_invalidos = []) {
 }
 
 function verificar_inputs_notas(qnt_notas, json_materia) {
+    // Verificará se os inputs de notas estão corretos. Retornará a quantidade de erros encontrados.
     let qnt_erros = 0
     if (qnt_notas) {
         json_materia['notas'] = {}
@@ -248,7 +256,7 @@ function verificar_inputs_notas(qnt_notas, json_materia) {
             let id_nota = document.querySelector(`#id-nota-${num_nota_atual}`).value.trim()
 
             qnt_erros += verificar_input(nome_nota, document.querySelector(`#erro-nome-nota-${num_nota_atual}`), lista_nomes_usados)
-            lista_nomes_usados.push(nome_nota)
+            lista_nomes_usados.push(nome_nota)  // Notas não podem possuir nomes iguais.
             qnt_erros += verificar_input(id_nota, document.querySelector(`#erro-id-nota-${num_nota_atual}`))
 
             if (nome_nota && id_nota)
@@ -262,8 +270,27 @@ function verificar_input_formula(node_erro, json_materia) {
     if (verificar_input(json_materia['formula'], node_erro)) 
         return 1
     
-    let notas = {}
-    var formula = ' ' + json_materia['formula'].replace(/\s/g, '') + ' '
+    let notas = {}  // terá notas[nome_nota] = 1, para substituir na fórmula formatada para testar a validade.
+    var formula = formatar_formula(json_materia, notas)
+    // Verifica se a formula fornecida é válida. Substituirá todas as variáveis (se forem válidas) por 1 e executará a fórmula.
+    try {
+        let valor_teste = eval(formula)
+        if (valor_teste && valor_teste != Infinity) {
+            node_erro.innerHTML = ''
+            json_materia['formulaFormatada'] = formula
+            return 0
+        }
+        node_erro.innerHTML = 'Formula inválida'
+        return 1
+    } catch(error) {
+        node_erro.innerHTML = 'Formula inválida'
+        return 1
+    }
+}
+
+function formatar_formula(json_materia, notas) {
+    // Trocará todos os nomes de notas da formula original por notas['nome_variavel'] (facilitará na hora de aplicar a formula).
+    let formula = ' ' + json_materia['formula'].replace(/\s/g, '') + ' '
     for (let nome_nota in json_materia['notas']) {
         if (json_materia['notas'].hasOwnProperty(nome_nota)) {
             let expressao = new RegExp(`(\\W)${nome_nota}(\\W)`, 'ig')
@@ -271,18 +298,11 @@ function verificar_input_formula(node_erro, json_materia) {
             notas[nome_nota] = 1
         }
     }
-    // Verifica se a formula fornecida é válida. Se a formula é inválida, ou ela retornará um NaN ou undefined ou acontecerá um erro, parando no catch.
-    let valor_teste = eval(formula)
-    if (valor_teste && valor_teste != Infinity) {
-        node_erro.innerHTML = ''
-        json_materia['formulaFormatada'] = formula
-        return 0
-    }
-    node_erro.innerHTML = 'Formula inválida'
-    return 1
+    return formula
 }
 
 function salvar_info_materia(nome_materia, json_materia) {
+    // Salvará os dados da matéria no localStorage e adicionará um botão para poder edita-la, caso a matéria ainda não existisse.
     if (!localStorage.getItem(nome_materia)) {
         document.querySelector("#container-materias").append(retornar_btn_materia(nome_materia))
     }
@@ -333,6 +353,7 @@ function salvar_JSON_materia() {
             }
             adicionar_btns_materias()
             modal_JSON.hide()
+            restaurar_modal_JSON()
         } catch(error) {
             console.log(error)
             alert("Não foi possível salvar !")
