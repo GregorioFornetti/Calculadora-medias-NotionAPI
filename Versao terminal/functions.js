@@ -1,12 +1,24 @@
-// npm install prompt-sync
+
 const fs = require('fs')
 const prompt = require('prompt-sync')({sigint: true})
 const { Client } = require('@notionhq/client')
+const CONFIGS_PATH = './configs.json'
+
+var configs
 
 module.exports = {
+    inicializar_programa: () => {
+        try {
+            configs = JSON.parse(fs.readFileSync(CONFIGS_PATH, {encoding: "utf-8"}))
+        } catch(error) {
+            configs = {}
+            fs.writeFileSync(CONFIGS_PATH, "{}")
+        }
+    },
+
     imprimir_opcoes: () => {
-        console.log("1 - Configurar")
-        console.log("2 - Ver configurações")
+        console.log("1 - Configurar token")
+        console.log("2 - Imprimir configurações")
         console.log("3 - Adicionar matéria")
         console.log("4 - Imprimir e atualizar médias")
         console.log("5 - Apagar matéria")
@@ -18,95 +30,41 @@ module.exports = {
     },
 
     configurar: () => {
-        let resposta = prompt("Digite o token de integração: ")
-
-        try {
-            var dados = JSON.parse(fs.readFileSync('./materias.json'))
-        } catch(error) {
-            var dados = {}
-        }
-        dados['token'] = resposta
-        
-        try {
-            fs.writeFileSync('./materias.json', JSON.stringify(dados))
-            console.log("Configurações salvas com sucesso !")
-        } catch(error) {
-            console.error(error)
-        }
+        // Coleta os inputs de configuração e os salva no arquivo de configuração.
+        // Por enquanto, apenas coletará o input do token
+        let resposta = coletar_input("Digite o token de integração: ")
+        configs['token'] = resposta
+        salvar_configuracoes("Configurações salvas com sucesso !")
     },
 
     imprimir_configs: () => {
-        try {
-            let configs = fs.readFileSync("./materias.json", {encoding:'utf8'})
-            configs = JSON.parse(configs)
-            console.log("Configurações:")
-            console.log(`Token: ${configs['token']}\n`)
+        console.log(`Token: ${configs['token']}\n`)
 
-            for (let materia in configs) {
-                if (configs.hasOwnProperty(materia) && materia != "token") {
-                    console.log(`Matéria: ${materia}`)
-                    console.log(`Id banco de dados média: ${configs[materia]['id']}`)
-                    console.log(`Formula: ${configs[materia]['formula']}`)
-                    for (let nota in configs[materia]['notas'])
-                        if (configs[materia]['notas'].hasOwnProperty(nota))
-                            console.log(`Nota ${nota}: ${configs[materia]['notas'][nota]}`)
-                    console.log()
-                }
+        for (let materia in configs) {
+            if (configs.hasOwnProperty(materia) && materia != "token") {
+                console.log(`Matéria: ${materia}`)
+                console.log(`Id banco de dados média: ${configs[materia]['id']}`)
+                console.log(`Formula: ${configs[materia]['formula']}`)
+                for (let nota in configs[materia]['notas'])
+                    if (configs[materia]['notas'].hasOwnProperty(nota))
+                        console.log(`Nota ${nota}: ${configs[materia]['notas'][nota]}`)
+                console.log()
             }
-        } catch (error) {
-            console.error(error)
         }
     },
 
     adicionar_materia: () => {
-        try {
-            var materias = JSON.parse(fs.readFileSync("./materias.json", {encoding:'utf8'}))
-        } catch (error) {
-            var materias = {}
-        }
-
-        let nome_materia = prompt("Digite o nome da matéria: ")
-
-        if (materias.hasOwnProperty(nome_materia)) {
+        let nome_materia = coletar_input("Digite o nome da matéria: ", ['token'])
+        if (configs.hasOwnProperty(nome_materia)) {
             console.log("Matéria ja existente !")
             return
         }
-        let id_db_medias = prompt("Digite o ID do banco de dados(tabela) para armazenar as médias: ")
-        materias[nome_materia] = {"notas" : {}, "id": id_db_medias}
 
-        let qnt_notas = false
-        while (!qnt_notas || qnt_notas <= 0)
-            qnt_notas = parseInt(prompt("Digite a quantidade de notas necessárias para computar a média: "))
+        configs[nome_materia] = {"id": coletar_input("Digite o ID do banco de dados(tabela) para armazenar as médias: "), "notas": {}}
+        coletar_notas(nome_materia, coletar_inteiro_positivo("Digite a quantidade de notas necessárias para computar a média: "))
+        coletar_formula(nome_materia)
 
-        for (let i = 1; i <= qnt_notas; i++) {
-            let nome_nota = prompt(`Digite o nome que será dado para a nota ${i}: `)
-            if (materias[nome_materia]["notas"].hasOwnProperty(nome_nota)) {
-                console.log("Nome de nota já utilizado ! Tente novamente !")
-                i--
-            }
-            else {
-                let id_database = prompt(`Digite o ID do banco de dados(tabela) que está armazenando a sua nota ${i}: `)
-                materias[nome_materia]["notas"][nome_nota] = id_database
-            }
-        }
-
-        let formula = prompt("Digite a formula que será usada no cálculo da média: ")
-        materias[nome_materia]['formula'] = formula
-        formula = ' ' + formula.replace(/\s/g, '') + ' '
-        for (let nome_nota in materias[nome_materia]["notas"]) {
-            if (materias[nome_materia]["notas"].hasOwnProperty(nome_nota)) {
-                let expressao = new RegExp(`(\\W)${nome_nota}(\\W)`, 'ig')
-                formula = formula.replace(expressao, `$1notas['${nome_nota}']$2`)
-            }
-        }
-        materias[nome_materia]['formulaFormatada'] = formula.trim()
-
-        try {
-            fs.writeFileSync("./materias.json", JSON.stringify(materias))
-            console.log("Matéria adicionada com sucesso !")
-        } catch (error) {
-            console.log(error)
-        }
+        salvar_configuracoes("Matéria salva com sucesso !")
     },
 
     imprimir_e_atualizar_materias : () => {
@@ -135,6 +93,64 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+    }
+}
+
+function coletar_input(mensagem, lista_inputs_invalidos = []) {
+    let resposta = ''
+    while (!resposta || lista_inputs_invalidos.includes(resposta))
+        resposta = prompt(mensagem).trim()
+    return resposta
+}
+
+function coletar_inteiro_positivo(mensagem) {
+    let resposta = ''
+    while (!resposta || resposta <= 0)
+        resposta = parseInt(prompt(mensagem))
+    return resposta
+}
+
+function coletar_notas(nome_materia, qnt_notas) {
+    for (let i = 1; i <= qnt_notas; i++) {
+        let nome_nota = coletar_input(`Digite o nome que será dado para a nota ${i}: `, Object.keys(configs[nome_materia]['notas']))
+        let id_database = coletar_input(`Digite o ID do banco de dados(tabela) que está armazenando a sua nota ${i}: `)
+        configs[nome_materia]['notas'][nome_nota] = id_database
+    }
+}
+
+function coletar_formula(nome_materia) {
+    while (true) {
+        let notas = {}
+        let formula = coletar_input("Digite a formula que será usada no cálculo da média: ")
+        configs[nome_materia]['formula'] = formula
+
+        formula = ' ' + formula.replace(/\s/g, '') + ' '
+        for (let nome_nota in configs[nome_materia]["notas"]) {
+            if (configs[nome_materia]["notas"].hasOwnProperty(nome_nota)) {
+                let expressao = new RegExp(`(\\W)${nome_nota}(\\W)`, 'ig')
+                formula = formula.replace(expressao, `$1notas['${nome_nota}']$2`)
+                notas[nome_nota] = 1
+            }
+        }
+
+        try {
+            let valor_teste = eval(formula)
+            if (valor_teste && valor_teste != Infinity) {
+                configs[nome_materia]['formulaFormatada'] = formula
+                return
+            }
+        } catch(error) {
+            console.error(error)
+        }
+    }
+}
+
+function salvar_configuracoes(mensagem_sucesso) {
+    try {
+        fs.writeFileSync(CONFIGS_PATH, JSON.stringify(configs))
+        console.log(mensagem_sucesso)
+    } catch(error) {
+        console.error(error)
     }
 }
 

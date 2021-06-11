@@ -3,6 +3,7 @@ var ferramentas = require("./functions")
 var opcao_escolhida
 
 (async() => {
+    ferramentas.inicializar_programa()
     while (true) {
         ferramentas.imprimir_opcoes()
         opcao_escolhida = ferramentas.ler_opcao()

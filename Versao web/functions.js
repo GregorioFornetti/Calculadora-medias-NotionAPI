@@ -250,13 +250,11 @@ function verificar_inputs_notas(qnt_notas, json_materia) {
     let qnt_erros = 0
     if (qnt_notas) {
         json_materia['notas'] = {}
-        let lista_nomes_usados = []
         for (let num_nota_atual = 1; num_nota_atual <= qnt_notas; num_nota_atual++) {
             let nome_nota = document.querySelector(`#nome-nota-${num_nota_atual}`).value.trim()
             let id_nota = document.querySelector(`#id-nota-${num_nota_atual}`).value.trim()
 
-            qnt_erros += verificar_input(nome_nota, document.querySelector(`#erro-nome-nota-${num_nota_atual}`), lista_nomes_usados)
-            lista_nomes_usados.push(nome_nota)  // Notas não podem possuir nomes iguais.
+            qnt_erros += verificar_input(nome_nota, document.querySelector(`#erro-nome-nota-${num_nota_atual}`), Object.keys(json_materia['notas']))
             qnt_erros += verificar_input(id_nota, document.querySelector(`#erro-id-nota-${num_nota_atual}`))
 
             if (nome_nota && id_nota)
