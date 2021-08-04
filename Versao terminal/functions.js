@@ -160,7 +160,7 @@ function isEmpty(obj) {
 
 async function imprimir_e_atualizar() {
     try {
-        var materias = JSON.parse(fs.readFileSync("./materias.json", {encoding: "utf-8"}))
+        var materias = JSON.parse(fs.readFileSync(CONFIGS_PATH, {encoding: "utf-8"}))
     } catch(error) {
         var materias = {}
     }
