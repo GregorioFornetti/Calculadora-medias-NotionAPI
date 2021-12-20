@@ -171,7 +171,7 @@ async function imprimir_e_atualizar() {
     }
 
     const notion = new Client({ auth: materias["token"] })
-    for (materia in materias) {
+    for (let materia in materias) {
         if (materias.hasOwnProperty(materia) && materia != 'token') {
             console.log(`Matéria: ${materia}`)
             let notas = {}
@@ -188,15 +188,23 @@ async function imprimir_e_atualizar() {
                         notasPiorCaso[nota] = 0
                         notasMelhorCaso[nota] = 0
                         var qnt_notas = response["results"].length
+                        var soma_pesos = 0
                         for (let i = 0; i < qnt_notas; i++) {
-                            if (response["results"][i]["properties"]["Nota"]["number"] >= 0) {
-                                notasPiorCaso[nota] += response["results"][i]["properties"]["Nota"]["number"]
-                                notasMelhorCaso[nota] += response["results"][i]["properties"]["Nota"]["number"]
-                            } else
-                                notasMelhorCaso[nota] += 10
+                            let peso_atual = 1
+                            if (response["results"][i]["properties"].hasOwnProperty("Peso") && response["results"][i]["properties"]["Peso"]["number"] > 1) {
+                                peso_atual = response["results"][i]["properties"]["Peso"]["number"]
+                            }
+                            soma_pesos += peso_atual
+                            
+                            if (response["results"][i]["properties"].hasOwnProperty("Nota") && response["results"][i]["properties"]["Nota"]["number"] >= 0) {
+                                notasPiorCaso[nota] += response["results"][i]["properties"]["Nota"]["number"] * peso_atual
+                                notasMelhorCaso[nota] += response["results"][i]["properties"]["Nota"]["number"] * peso_atual
+                            } else {
+                                notasMelhorCaso[nota] += 10 * peso_atual
+                            }
                         }
-                        notasPiorCaso[nota] /= qnt_notas
-                        notasMelhorCaso[nota] /= qnt_notas
+                        notasPiorCaso[nota] /= soma_pesos
+                        notasMelhorCaso[nota] /= soma_pesos
 
                         console.log(`${nota} (melhor caso): ${notasMelhorCaso[nota].toFixed(2)}`)
                         console.log(`${nota} (pior caso): ${notasPiorCaso[nota].toFixed(2)}`)
